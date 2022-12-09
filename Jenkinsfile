@@ -22,7 +22,7 @@ pipeline {
             steps { 
                withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
                  script{
-                 app =  docker.build("secdevops")
+                 app =  docker.build("secdevops1")
                  }
                }
             }
@@ -31,7 +31,7 @@ pipeline {
 	stage('Push') {
             steps {
                 script{
-                    docker.withRegistry('https://297621708399.dkr.ecr.ap-south-1.amazonaws.com/secdevops', 'ecr:ap-south-1:aws-credentials') {
+                    docker.withRegistry('https://297621708399.dkr.ecr.ap-south-1.amazonaws.com/secdevops1', 'ecr:ap-south-1:aws-credentials') {
                     app.push("latest")
                     }
                 }
