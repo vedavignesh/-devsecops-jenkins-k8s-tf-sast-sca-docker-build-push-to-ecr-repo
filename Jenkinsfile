@@ -20,20 +20,26 @@ pipeline {
 
 	stage('Build') { 
             steps { 
-               withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
-                 script{
-                 app =  docker.build("secdevops1")
+	       script{
+		   sh "docker build -t secdevops1 ."
+		    }
+              
                  }
                }
             }
     }
 
-	stage('Push') {
-            steps {
-                script{
-                    docker.withRegistry('https://297621708399.dkr.ecr.ap-south-1.amazonaws.com/secdevops1', 'ecr:ap-south-1:aws-credentials') {
-                    app.push("latest")
-                    }
+	
+			
+	stage(‘Pushing to ECR’) {
+	    steps{
+	       script {
+		   sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 297621708399.dkr.ecr.ap-south-1.amazonaws.com"
+		   sh “docker tag secdevops1:latest 297621708399.dkr.ecr.ap-south-1.amazonaws.com/secdevops1:latest”
+	           sh “docker push 297621708399.dkr.ecr.ap-south-1.amazonaws.com/secdevops1:latest”
+}
+}
+}
                 }
             }
     	}
